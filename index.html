@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>沧州大运河 - 千年水韵 古韵沧州</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: "Noto Serif SC", "STSong", "SimSun", "Songti SC", "KaiTi", "楷体", serif;
+  color: #2c3e50;
+  background: #f5f7fa;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+:root {
+  --cyan: #0f9d9d;
+  --cyan-dark: #0a7373;
+  --cyan-light: #b2e4e4;
+  --blue-deep: #1a3c5e;
+  --blue-mid: #2c5f8a;
+  --blue-light: #d0e4f5;
+  --gold: #c9a96e;
+  --gold-light: #f5edd6;
+  --white: #fff;
+  --text: #2c3e50;
+  --text-light: #5a6c7d;
+  --bg: #f5f7fa;
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+}
+
+/* 导航栏 */
+.navbar {
+  position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+  background: linear-gradient(135deg, rgba(26,60,94,0.95), rgba(15,157,157,0.92));
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  transition: all 0.4s;
+}
+.navbar.scrolled {
+  background: linear-gradient(135deg, rgba(26,60,94,0.98), rgba(10,115,115,0.96));
+  box-shadow: 0 2px 24px rgba(0,0,0,0.2);
+}
+.nav-inner {
+  max-width: 1280px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 68px;
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--white); font-size: 1.35rem; font-weight: 700;
+  letter-spacing: 2px; text-decoration: none;
+  white-space: nowrap;
+}
+.logo-icon {
+  width: 42px; height: 42px;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="g" x1="0%25" y1="0%25" x2="100%25" y2="100%25"><stop offset="0%25" style="stop-color:%23c9a96e"/><stop offset="100%25" style="stop-color:%23f5edd6"/></linearGradient></defs><path d="M50 10 C20 20 10 45 10 60 C10 78 28 90 50 90 C72 90 90 78 90 60 C90 45 80 20 50 10Z" fill="none" stroke="url(%23g)" stroke-width="2.5"/><path d="M50 20 C28 28 20 48 20 60 C20 74 33 82 50 82 C67 82 80 74 80 60 C80 48 72 28 50 20Z" fill="none" stroke="url(%23g)" stroke-width="2"/><text x="50" y="62" text-anchor="middle" fill="url(%23g)" font-size="32" font-weight="bold">运</text></svg>') center/contain no-repeat;
+}
+.nav-links { display: flex; list-style: none; gap: 8px; align-items: center; }
+.nav-links a {
+  color: rgba(255,255,255,0.85); text-decoration: none;
+  padding: 8px 16px; border-radius: 20px; font-size: 0.95rem;
+  letter-spacing: 1px; transition: all 0.3s; position: relative;
+}
+.nav-links a:hover, .nav-links a.active {
+  color: #fff; background: rgba(255,255,255,0.15);
+}
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 4px; z-index: 1001;
+}
+.hamburger span {
+  display: block; width: 26px; height: 2px;
+  background: var(--white); border-radius: 2px; transition: all 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+/* 轮播 */
+.hero {
+  position: relative; width: 100%; height: 100vh; min-height: 600px;
+  overflow: hidden; margin-top: 0;
+}
+.hero-slides { display: flex; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.25,0.1,0.25,1); }
+.hero-slide {
+  min-width: 100%; height: 100%; position: relative;
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+}
+.hero-slide img {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover; filter: brightness(0.45);
+}
+.hero-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(180deg, rgba(26,60,94,0.3) 0%, rgba(26,60,94,0.5) 50%, rgba(26,60,94,0.7) 100%);
+}
+.hero-content {
+  position: relative; z-index: 2; text-align: center; color: #fff;
+  padding: 0 24px; max-width: 800px;
+}
+.hero-content h1 {
+  font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 900;
+  letter-spacing: 6px; margin-bottom: 16px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  animation: fadeInUp 1s ease;
+}
+.hero-content .subtitle {
+  font-size: clamp(1rem, 2vw, 1.3rem); letter-spacing: 4px;
+  opacity: 0.9; margin-bottom: 20px;
+  animation: fadeInUp 1s ease 0.2s both;
+}
+.hero-content .hero-line {
+  width: 80px; height: 2px; background: var(--gold);
+  margin: 0 auto 24px;
+  animation: fadeInUp 1s ease 0.3s both;
+}
+.hero-content p {
+  font-size: 1.05rem; opacity: 0.8; line-height: 1.8;
+  animation: fadeInUp 1s ease 0.4s both;
+}
+.hero-dots {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 12px; z-index: 3;
+}
+.hero-dots button {
+  width: 36px; height: 4px; border-radius: 2px; border: none;
+  background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.4s;
+}
+.hero-dots button.active { background: var(--gold); width: 48px; }
+.hero-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+  color: #fff; width: 48px; height: 48px; border-radius: 50%;
+  cursor: pointer; font-size: 1.2rem; transition: all 0.3s;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(6px);
+}
+.hero-arrow:hover { background: rgba(255,255,255,0.25); }
+.hero-arrow.prev { left: 24px; }
+.hero-arrow.next { right: 24px; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 通用区块 */
+.section {
+  padding: 80px 24px; max-width: 1280px; margin: 0 auto;
+}
+.section-header {
+  text-align: center; margin-bottom: 56px;
+}
+.section-header .cn-label {
+  font-size: 0.85rem; letter-spacing: 4px; color: var(--cyan);
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.section-header h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--blue-deep);
+  letter-spacing: 3px; position: relative; display: inline-block;
+}
+.section-header h2::after {
+  content: ''; display: block; width: 48px; height: 2px;
+  background: var(--gold); margin: 14px auto 0;
+}
+.section-header .desc {
+  margin-top: 12px; color: var(--text-light); font-size: 0.95rem;
+}
+
+/* 运河历史 */
+.history-section { background: linear-gradient(180deg, #fff 0%, #f0f4f8 100%); }
+.history-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+}
+.history-img {
+  border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-lg);
+  position: relative;
+}
+.history-img::after {
+  content: ''; position: absolute; top: 16px; left: 16px;
+  width: 100%; height: 100%; border: 2px solid var(--cyan-light);
+  border-radius: 12px; z-index: -1;
+}
+.history-img img { width: 100%; height: auto; display: block; border-radius: 12px; }
+.history-text h3 { font-size: 1.5rem; color: var(--blue-deep); margin-bottom: 20px; letter-spacing: 2px; }
+.history-text p { color: var(--text-light); margin-bottom: 16px; font-size: 0.98rem; }
+.history-stats { display: flex; gap: 32px; margin-top: 28px; }
+.history-stat { text-align: center; }
+.history-stat .num { font-size: 2rem; font-weight: 700; color: var(--cyan); }
+.history-stat .label { font-size: 0.85rem; color: var(--text-light); margin-top: 4px; }
+
+/* 沿岸景点 */
+.spots-section { background: #fff; }
+.spots-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
+}
+.spot-card {
+  border-radius: 12px; overflow: hidden; background: #fff;
+  box-shadow: var(--shadow); transition: all 0.4s;
+  cursor: pointer;
+}
+.spot-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+.spot-card-img { width: 100%; height: 220px; overflow: hidden; position: relative; }
+.spot-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.spot-card:hover .spot-card-img img { transform: scale(1.08); }
+.spot-card-body { padding: 20px; }
+.spot-card-body h4 { font-size: 1.15rem; color: var(--blue-deep); margin-bottom: 8px; }
+.spot-card-body p { font-size: 0.88rem; color: var(--text-light); }
+.spot-card-body .tag {
+  display: inline-block; padding: 3px 10px; border-radius: 12px;
+  font-size: 0.75rem; background: var(--cyan-light); color: var(--cyan-dark);
+  margin-top: 8px;
+}
+
+/* 非遗文化 */
+.culture-section { background: linear-gradient(180deg, #f0f4f8 0%, #fff 100%); }
+.culture-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 28px;
+}
+.culture-card {
+  background: #fff; border-radius: 12px; padding: 32px 24px;
+  text-align: center; box-shadow: var(--shadow);
+  transition: all 0.4s; border-top: 3px solid transparent;
+}
+.culture-card:hover {
+  border-top-color: var(--cyan); transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+.culture-icon {
+  width: 64px; height: 64px; margin: 0 auto 16px;
+  background: var(--cyan-light); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; color: var(--cyan-dark);
+}
+.culture-card h4 { font-size: 1.1rem; color: var(--blue-deep); margin-bottom: 8px; }
+.culture-card p { font-size: 0.88rem; color: var(--text-light); }
+
+/* 旅游攻略 */
+.tips-section { background: #fff; }
+.tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.tips-card {
+  background: #f8fafb; border-radius: 12px; padding: 28px;
+  box-shadow: var(--shadow); border-left: 4px solid var(--cyan);
+}
+.tips-card h4 { font-size: 1.15rem; color: var(--blue-deep); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.tips-card ul { list-style: none; }
+.tips-card li {
+  padding: 6px 0; color: var(--text-light); font-size: 0.92rem;
+  border-bottom: 1px dashed #e0e5ea;
+}
+.tips-card li:last-child { border-bottom: none; }
+.tips-card li::before { content: '▸ '; color: var(--cyan); }
+
+/* 留言板 */
+.message-section { background: linear-gradient(180deg, #f0f4f8 0%, #f5f7fa 100%); }
+.message-container { max-width: 720px; margin: 0 auto; }
+.message-form {
+  background: #fff; border-radius: 12px; padding: 32px;
+  box-shadow: var(--shadow); margin-bottom: 32px;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 0.9rem; color: var(--blue-deep); font-weight: 600; }
+.form-group input, .form-group textarea {
+  padding: 10px 14px; border: 1px solid #dde4ed; border-radius: 8px;
+  font-size: 0.95rem; font-family: inherit; transition: border 0.3s;
+  outline: none; resize: vertical;
+}
+.form-group input:focus, .form-group textarea:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(15,157,157,0.1); }
+.form-group textarea { min-height: 120px; }
+.form-group.full { grid-column: 1 / -1; }
+.btn-submit {
+  padding: 12px 36px; background: linear-gradient(135deg, var(--cyan), var(--cyan-dark));
+  color: #fff; border: none; border-radius: 24px; font-size: 1rem;
+  letter-spacing: 2px; cursor: pointer; transition: all 0.3s;
+  font-family: inherit; margin-top: 8px;
+}
+.btn-submit:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(15,157,157,0.35); }
+.message-list { display: flex; flex-direction: column; gap: 16px; }
+.message-item {
+  background: #fff; border-radius: 10px; padding: 20px;
+  box-shadow: var(--shadow); border-left: 4px solid var(--cyan-light);
+  animation: fadeInUp 0.5s ease;
+}
+.message-item .msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.message-item .msg-name { font-weight: 700; color: var(--blue-deep); }
+.message-item .msg-time { font-size: 0.8rem; color: #aab; }
+.message-item .msg-text { color: var(--text-light); font-size: 0.93rem; line-height: 1.7; }
+.no-messages { text-align: center; color: var(--text-light); padding: 40px; }
+
+/* 页脚 */
+.footer {
+  background: var(--blue-deep); color: rgba(255,255,255,0.75);
+  padding: 48px 24px 24px;
+}
+.footer-grid {
+  max-width: 1280px; margin: 0 auto 32px;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 36px;
+}
+.footer-col h4 { color: #fff; font-size: 1.05rem; margin-bottom: 16px; letter-spacing: 2px; }
+.footer-col p, .footer-col a { font-size: 0.85rem; line-height: 2; }
+.footer-col a { color: rgba(255,255,255,0.6); text-decoration: none; display: block; transition: color 0.3s; }
+.footer-col a:hover { color: var(--gold); }
+.footer-bottom {
+  max-width: 1280px; margin: 0 auto; padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  text-align: center; font-size: 0.8rem;
+}
+
+/* 返回顶部 */
+.back-top {
+  position: fixed; bottom: 32px; right: 32px; z-index: 999;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan), var(--cyan-dark));
+  color: #fff; border: none; cursor: pointer; font-size: 1.2rem;
+  box-shadow: 0 4px 16px rgba(15,157,157,0.3);
+  opacity: 0; pointer-events: none; transition: all 0.3s;
+}
+.back-top.visible { opacity: 1; pointer-events: auto; }
+.back-top:hover { transform: translateY(-3px); }
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  .nav-links {
+    position: fixed; top: 0; right: -100%; width: 72%; height: 100vh;
+    flex-direction: column; justify-content: center; gap: 20px;
+    background: linear-gradient(180deg, rgba(26,60,94,0.97), rgba(15,157,157,0.95));
+    backdrop-filter: blur(12px); transition: right 0.4s; padding: 40px;
+  }
+  .nav-links.open { right: 0; }
+  .nav-links a { font-size: 1.15rem; }
+  .history-grid, .tips-grid { grid-template-columns: 1fr; }
+  .history-img::after { display: none; }
+  .form-row { grid-template-columns: 1fr; }
+  .hero-arrow { width: 36px; height: 36px; font-size: 0.9rem; }
+  .hero-arrow.prev { left: 12px; }
+  .hero-arrow.next { right: 12px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .section { padding: 56px 20px; }
+}
+@media (max-width: 480px) {
+  .navbar { height: 56px; }
+  .nav-inner { height: 56px; }
+  .logo { font-size: 1.1rem; }
+  .hero-content h1 { font-size: 1.8rem; letter-spacing: 3px; }
+  .history-stats { flex-direction: column; gap: 16px; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .spots-grid { grid-template-columns: 1fr; }
+  .culture-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- 导航栏 -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="#home" class="logo">
+      <span class="logo-icon"></span>
+      <span>沧州大运河</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" class="active">首页</a></li>
+      <li><a href="#history">运河历史</a></li>
+      <li><a href="#spots">沿岸景点</a></li>
+      <li><a href="#culture">非遗文化</a></li>
+      <li><a href="#tips">旅游攻略</a></li>
+      <li><a href="#message">留言板</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- 轮播 -->
+<section class="hero" id="home">
+  <div class="hero-slides" id="heroSlides">
+    <div class="hero-slide">
+      <img src="e9cb-cac84d41a2a994e2cb3eaaac769855e5.jpg" alt="沧州大运河全景">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>沧州大运河</h1>
+        <div class="subtitle">千 年 水 韵 · 古 韵 沧 州</div>
+        <div class="hero-line"></div>
+        <p>京杭大运河蜿蜒千里，沧州段承载千年风华。<br>悠悠运河水，见证了沧州从古至今的繁荣与变迁。</p>
+      </div>
+    </div>
+    <div class="hero-slide">
+      <img src="4B3CA863CBE743E7FBED8478641B127108BF28C4_size309_w1024_h593.jpg" alt="运河古桥">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>运河古桥</h1>
+        <div class="subtitle">横 跨 千 年 · 连 接 古 今</div>
+        <div class="hero-line"></div>
+        <p>一座座古桥横跨运河两岸，<br>承载着无数往来行人与商船的记忆。</p>
+      </div>
+    </div>
+    <div class="hero-slide">
+      <img src="afda76f161464b3ca9125886514c0ba4.webp" alt="运河夜景">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>灯火运河</h1>
+        <div class="subtitle">夜 色 如 画 · 灯 影 摇 曳</div>
+        <div class="hero-line"></div>
+        <p>夜幕下的运河两岸灯火璀璨，<br>古韵与现代交织，展现别样魅力。</p>
+      </div>
+    </div>
+  </div>
+  <button class="hero-arrow prev" id="heroPrev" aria-label="上一张">◂</button>
+  <button class="hero-arrow next" id="heroNext" aria-label="下一张">▸</button>
+  <div class="hero-dots" id="heroDots"></div>
+</section>
+
+<!-- 运河历史 -->
+<section class="section history-section" id="history">
+  <div class="section-header">
+    <div class="cn-label">History</div>
+    <h2>运河历史</h2>
+    <p class="desc">千年流淌，见证沧州古今繁华</p>
+  </div>
+  <div class="history-grid">
+    <div class="history-img">
+      <img src="e9cb-cac84d41a2a994e2cb3eaaac769855e5.jpg" alt="大运河历史风貌">
+    </div>
+    <div class="history-text">
+      <h3>京杭大运河 · 沧州段</h3>
+      <p>沧州大运河是京杭大运河的重要组成部分，全长约215公里，流经沧州市区及多个县域。自隋唐以来，沧州段运河就是南北水运交通的要冲，商贾云集、舟楫往来，促进了沧州的城市繁荣与文化交融。</p>
+      <p>沧州因运河而兴——运河带来的不仅是物资的流通，更是文化的碰撞与融合。武术、杂技、漕运文化在这片土地上生根发芽，形成了沧州独特的城市气质。</p>
+      <p>近年来，沧州市大力推进大运河文化带建设，修缮历史遗迹，打造运河景观带，让古老的运河焕发新的生机。</p>
+      <div class="history-stats">
+        <div class="history-stat"><div class="num">2500+</div><div class="label">年运河历史</div></div>
+        <div class="history-stat"><div class="num">215</div><div class="label">公里沧州段</div></div>
+        <div class="history-stat"><div class="num">30+</div><div class="label">沿岸景点</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 沿岸景点 -->
+<section class="section spots-section" id="spots">
+  <div class="section-header">
+    <div class="cn-label">Scenic Spots</div>
+    <h2>沿岸景点</h2>
+    <p class="desc">沿运河而行，一步一景，尽览沧州之美</p>
+  </div>
+  <div class="spots-grid">
+    <div class="spot-card">
+      <div class="spot-card-img">
+        <img src="10F054A25C117B684CD712D94E7F2E671944D3F2_size330_w1024_h563.jpg" alt="清风楼">
+      </div>
+      <div class="spot-card-body">
+        <h4>清风楼</h4>
+        <p>沧州标志性古建筑，耸立于运河之畔，登楼远眺运河风光尽收眼底。</p>
+        <span class="tag">古建筑</span>
+      </div>
+    </div>
+    <div class="spot-card">
+      <div class="spot-card-img">
+        <img src="4B3CA863CBE743E7FBED8478641B127108BF28C4_size309_w1024_h593.jpg" alt="运河古桥">
+      </div>
+      <div class="spot-card-body">
+        <h4>运河古桥群</h4>
+        <p>多座明清古桥横跨运河，石拱桥造型优美，是运河文化的重要遗存。</p>
+        <span class="tag">历史遗迹</span>
+      </div>
+    </div>
+    <div class="spot-card">
+      <div class="spot-card-img">
+        <img src="afda76f161464b3ca9125886514c0ba4.webp" alt="运河公园">
+      </div>
+      <div class="spot-card-body">
+        <h4>运河生态公园</h4>
+        <p>沿运河两岸打造的生态景观带，集休闲健身、观光游览于一体。</p>
+        <span class="tag">生态景观</span>
+      </div>
+    </div>
+    <div class="spot-card">
+      <div class="spot-card-img">
+        <img src="476b39a09f9f4d44a817ffad3a06bb47.jpeg" alt="沧州文庙">
+      </div>
+      <div class="spot-card-body">
+        <h4>沧州文庙</h4>
+        <p>始建于明代的古建筑群，红墙碧瓦气势恢宏，承载沧州千年文脉。</p>
+        <span class="tag">文化古迹</span>
+      </div>
+    </div>
+    <div class="spot-card">
+      <div class="spot-card-img">
+        <img src="10F054A25C117B684CD712D94E7F2E671944D3F2_size330_w1024_h563.jpg" alt="南川楼">
+      </div>
+      <div class="spot-card-body">
+        <h4>南川楼</h4>
+        <p>运河沿岸复建的古楼，再现明清时期运河码头繁华盛景，市民休闲好去处。</p>
+        <span class="tag">地标</span>
+      </div>
+    </div>
+    <div class="spot-card">
+      <div class="spot-card-img">
+        <img src="e9cb-cac84d41a2a994e2cb3eaaac769855e5.jpg" alt="运河码头">
+      </div>
+      <div class="spot-card-body">
+        <h4>古运河码头遗址</h4>
+        <p>保存完好的明清运河码头遗址，见证昔日"千帆竞发、百货云集"的盛况。</p>
+        <span class="tag">遗址</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 非遗文化 -->
+<section class="section culture-section" id="culture">
+  <div class="section-header">
+    <div class="cn-label">Intangible Heritage</div>
+    <h2>非遗文化</h2>
+    <p class="desc">运河滋养的非物质文化遗产，薪火相传</p>
+  </div>
+  <div class="culture-grid">
+    <div class="culture-card">
+      <div class="culture-icon">🥋</div>
+      <h4>沧州武术</h4>
+      <p>沧州是中华武术发源地之一，八极拳、劈挂拳等拳种源远流长，素有"武术之乡"美誉。</p>
+    </div>
+    <div class="culture-card">
+      <div class="culture-icon">🎪</div>
+      <h4>吴桥杂技</h4>
+      <p>吴桥是闻名世界的"杂技之乡"，杂技艺术传承千年，惊险奇绝，享誉海内外。</p>
+    </div>
+    <div class="culture-card">
+      <div class="culture-icon">🎭</div>
+      <h4>沧州木版年画</h4>
+      <p>色彩浓烈、线条粗犷的沧州年画，承载着运河沿岸人民的民俗信仰与美好愿望。</p>
+    </div>
+    <div class="culture-card">
+      <div class="culture-icon">🏮</div>
+      <h4>运河花灯</h4>
+      <p>每逢元宵佳节，运河两岸花灯璀璨，各式传统花灯工艺精湛，映照千年水韵。</p>
+    </div>
+    <div class="culture-card">
+      <div class="culture-icon">🎏</div>
+      <h4>泊头铸造技艺</h4>
+      <p>泊头铸造始于明代，与运河漕运紧密相连，铸造的铁狮"镇海吼"为沧州城市象征。</p>
+    </div>
+    <div class="culture-card">
+      <div class="culture-icon">🎵</div>
+      <h4>运河号子</h4>
+      <p>运河船工号子是漕运文化的活化石，雄浑有力的号子声回荡在千年运河之上。</p>
+    </div>
+    <div class="culture-card">
+      <div class="culture-icon">🍜</div>
+      <h4>沧州美食</h4>
+      <p>火锅鸡、羊肠汤、狮子头——运河带来的南北风味在此交融，形成独特饮食文化。</p>
+    </div>
+    <div class="culture-card">
+      <div class="culture-icon">🖌️</div>
+      <h4>沧州书法</h4>
+      <p>沧州自古文风鼎盛，名家辈出，书法艺术在运河文化的熏陶下传承发展。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 旅游攻略 -->
+<section class="section tips-section" id="tips">
+  <div class="section-header">
+    <div class="cn-label">Travel Guide</div>
+    <h2>旅游攻略</h2>
+    <p class="desc">畅游沧州大运河，收藏这份实用指南</p>
+  </div>
+  <div class="tips-grid">
+    <div>
+      <div class="tips-card" style="margin-bottom:20px;">
+        <h4>🗺️ 推荐路线</h4>
+        <ul>
+          <li><strong>一日精华游：</strong>清风楼 → 运河公园 → 文庙 → 南川楼 → 运河夜市</li>
+          <li><strong>两日深度游：</strong>D1 沧州市区运河景点 + D2 吴桥杂技大世界</li>
+          <li><strong>文化体验游：</strong>运河博物馆 → 非遗传习所 → 古码头遗址</li>
+          <li><strong>美食寻味游：</strong>沿运河美食街品尝地道沧州味道</li>
+        </ul>
+      </div>
+      <div class="tips-card">
+        <h4>🚗 交通指南</h4>
+        <ul>
+          <li>高铁：沧州西站，北京出发约50分钟可达</li>
+          <li>自驾：京沪高速、京台高速沧州出口</li>
+          <li>市内：公交专线直达运河各景点</li>
+          <li>推荐：沿运河绿道骑行或步行，体验最佳</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="tips-card" style="margin-bottom:20px;">
+        <h4>📅 最佳时节</h4>
+        <ul>
+          <li><strong>春季（3-5月）：</strong>运河两岸花红柳绿，气候宜人</li>
+          <li><strong>夏季（6-8月）：</strong>夜游运河最佳，清风楼夜市热闹</li>
+          <li><strong>秋季（9-11月）：</strong>天高云淡，运河秋色如画</li>
+          <li><strong>元宵节：</strong>运河灯会璀璨夺目，非遗表演集中</li>
+        </ul>
+      </div>
+      <div class="tips-card">
+        <h4>💡 实用贴士</h4>
+        <ul>
+          <li>运河沿岸景点多免费开放，部分博物馆需预约</li>
+          <li>夏季注意防晒，建议早晚出行</li>
+          <li>品尝沧州火锅鸡推荐老字号店铺</li>
+          <li>购买非遗手工艺品可到南川楼文化街区</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 留言板 -->
+<section class="section message-section" id="message">
+  <div class="section-header">
+    <div class="cn-label">Message Board</div>
+    <h2>留言板</h2>
+    <p class="desc">分享您与沧州大运河的故事</p>
+  </div>
+  <div class="message-container">
+    <div class="message-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>您的姓名</label>
+          <input type="text" id="msgName" placeholder="请输入姓名" maxlength="20">
+        </div>
+        <div class="form-group">
+          <label>来自城市</label>
+          <input type="text" id="msgCity" placeholder="例如：北京" maxlength="20">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>留言内容</label>
+          <textarea id="msgContent" placeholder="分享您游览沧州大运河的感受与故事…" maxlength="500"></textarea>
+        </div>
+      </div>
+      <button class="btn-submit" id="btnSubmit">发 布 留 言</button>
+    </div>
+    <div class="message-list" id="messageList"></div>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4>沧州大运河</h4>
+      <p>千年水韵，古韵沧州。<br>京杭大运河沧州段，承载着厚重的历史与璀璨的文化，欢迎五湖四海的朋友前来感受运河之美。</p>
+    </div>
+    <div class="footer-col">
+      <h4>快速导航</h4>
+      <a href="#home">首页</a>
+      <a href="#history">运河历史</a>
+      <a href="#spots">沿岸景点</a>
+      <a href="#culture">非遗文化</a>
+      <a href="#tips">旅游攻略</a>
+      <a href="#message">留言板</a>
+    </div>
+    <div class="footer-col">
+      <h4>相关链接</h4>
+      <a href="#">沧州市文旅局</a>
+      <a href="#">大运河国家文化公园</a>
+      <a href="#">中国大运河博物馆</a>
+      <a href="#">吴桥杂技大世界</a>
+    </div>
+    <div class="footer-col">
+      <h4>联系我们</h4>
+      <p>地址：河北省沧州市<br>邮箱：cangzhou@canal.cn<br>电话：0317-XXXXXXX</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 沧州大运河宣传网站 | 千年水韵 · 古韵沧州 | 仅供宣传展示使用</p>
+  </div>
+</footer>
+
+<!-- 返回顶部 -->
+<button class="back-top" id="backTop" aria-label="返回顶部">↑</button>
+
+<script>
+/* 导航栏滚动效果 */
+const navbar = document.getElementById('navbar');
+const backTop = document.getElementById('backTop');
+
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  navbar.classList.toggle('scrolled', y > 60);
+  backTop.classList.toggle('visible', y > 400);
+});
+
+backTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* 汉堡菜单 */
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  navLinks.classList.toggle('open');
+});
+
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    navLinks.classList.remove('open');
+  });
+});
+
+/* 导航高亮 */
+const sections = document.querySelectorAll('section[id]');
+const navAs = navLinks.querySelectorAll('a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(sec => {
+    const top = sec.offsetTop - 120;
+    if (window.scrollY >= top) current = sec.getAttribute('id');
+  });
+  navAs.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+
+/* 轮播 */
+const slides = document.getElementById('heroSlides');
+const dotsContainer = document.getElementById('heroDots');
+const prevBtn = document.getElementById('heroPrev');
+const nextBtn = document.getElementById('heroNext');
+const slideCount = slides.children.length;
+let currentSlide = 0;
+let autoPlayTimer;
+
+for (let i = 0; i < slideCount; i++) {
+  const dot = document.createElement('button');
+  dot.setAttribute('aria-label', `第${i + 1}张`);
+  dot.addEventListener('click', () => goToSlide(i));
+  dotsContainer.appendChild(dot);
+}
+const dots = dotsContainer.querySelectorAll('button');
+
+function updateSlide() {
+  slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+  dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+}
+
+function goToSlide(index) {
+  currentSlide = index;
+  updateSlide();
+  resetAutoPlay();
+}
+
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % slideCount;
+  updateSlide();
+  resetAutoPlay();
+}
+
+function prevSlide() {
+  currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+  updateSlide();
+  resetAutoPlay();
+}
+
+function resetAutoPlay() {
+  clearInterval(autoPlayTimer);
+  autoPlayTimer = setInterval(nextSlide, 4500);
+}
+
+prevBtn.addEventListener('click', prevSlide);
+nextBtn.addEventListener('click', nextSlide);
+
+// 触摸滑动
+let touchStartX = 0;
+slides.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+slides.addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) diff > 0 ? nextSlide() : prevSlide();
+});
+
+updateSlide();
+autoPlayTimer = setInterval(nextSlide, 4500);
+
+/* 留言板 */
+const STORAGE_KEY = 'cangzhou_canal_messages';
+
+function loadMessages() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveMessages(msgs) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(msgs));
+}
+
+function renderMessages() {
+  const list = document.getElementById('messageList');
+  const msgs = loadMessages();
+  if (msgs.length === 0) {
+    list.innerHTML = '<div class="no-messages">还没有留言，快来分享您与运河的故事吧 ✍️</div>';
+    return;
+  }
+  list.innerHTML = msgs.slice().reverse().map(m => `
+    <div class="message-item">
+      <div class="msg-header">
+        <span class="msg-name">${escapeHtml(m.name)}${m.city ? ' · 来自 ' + escapeHtml(m.city) : ''}</span>
+        <span class="msg-time">${m.time}</span>
+      </div>
+      <div class="msg-text">${escapeHtml(m.content)}</div>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+document.getElementById('btnSubmit').addEventListener('click', () => {
+  const nameEl = document.getElementById('msgName');
+  const cityEl = document.getElementById('msgCity');
+  const contentEl = document.getElementById('msgContent');
+  const name = nameEl.value.trim();
+  const city = cityEl.value.trim();
+  const content = contentEl.value.trim();
+
+  if (!name) { nameEl.focus(); return alert('请输入您的姓名'); }
+  if (!content) { contentEl.focus(); return alert('请输入留言内容'); }
+  if (content.length < 4) { contentEl.focus(); return alert('留言内容至少4个字'); }
+
+  const msgs = loadMessages();
+  const now = new Date();
+  const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  msgs.push({ name, city, content, time: timeStr });
+  saveMessages(msgs);
+  renderMessages();
+  nameEl.value = '';
+  cityEl.value = '';
+  contentEl.value = '';
+  nameEl.focus();
+});
+
+renderMessages();
+</script>
+</body>
+</html>
